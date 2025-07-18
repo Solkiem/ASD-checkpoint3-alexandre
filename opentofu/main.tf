@@ -7,6 +7,12 @@ resource "proxmox_virtual_environment_container" "debian12-lxc" {
 
   node_name = "ns3065162"
   vm_id     = 244
+  
+  unprivileged = true
+
+  features {
+    nesting = true
+  }
 
   initialization {
     hostname = "checkpoint3-alexandre"
@@ -27,7 +33,7 @@ resource "proxmox_virtual_environment_container" "debian12-lxc" {
   }
 
   network_interface {
-    name = "vmbr2"
+    name = "eth0"
     bridge = "vmbr2"
   }
 

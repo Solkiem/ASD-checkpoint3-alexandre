@@ -18,6 +18,14 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+# Terraform state
+*.tfstate
+*.tfstate.*
+crash.log
+.terraform/
+opentofu/*.tfstate
+opentofu/*.tfstate.*
+
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf
