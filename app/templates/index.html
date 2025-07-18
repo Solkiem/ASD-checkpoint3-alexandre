@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventaire des Serveurs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Inventaire des Serveurs</h1>
+    <form method="post" action="/">
+        <label for="name">Nom du Serveur :</label>
+        <input type="text" id="name" name="name" required>
+        <label for="ip">Adresse IP :</label>
+        <input type="text" id="ip" name="ip" required>
+        <button type="submit">Ajouter</button>
+    </form>
+    <h2>Liste des Serveurs</h2>
+    <ul>
+        {% for server in servers %}
+            <li>{{ server.name }} - {{ server.ip }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

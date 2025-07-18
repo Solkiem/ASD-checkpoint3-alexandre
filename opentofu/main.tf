@@ -28,6 +28,7 @@ resource "proxmox_virtual_environment_container" "debian12-lxc" {
 
   network_interface {
     name = "vmbr2"
+    bridge = "vmbr2"
   }
 
   disk {

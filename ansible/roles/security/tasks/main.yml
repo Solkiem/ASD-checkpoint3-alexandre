@@ -1,0 +1,75 @@
+- name: Install iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+    update_cache: yes
+
+- name: Allow established and related connections
+  iptables:
+    chain: INPUT
+    protocol: all
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+
+- name: Allow loopback interface
+  iptables:
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+
+- name: Allow SSH
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 22
+    jump: ACCEPT
+
+- name: Allow HTTP
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 80
+    jump: ACCEPT
+
+- name: Allow HTTPS
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 443
+    jump: ACCEPT
+
+- name: Drop all other incoming traffic
+  iptables:
+    chain: INPUT
+    jump: DROP
+
+- name: Save iptables rules
+  command: netfilter-persistent save
+
+- name: Create a non-root user with sudo privileges
+  user:
+    name: simplonadmin
+    groups: sudo
+    shell: /bin/bash
+    create_home: yes
+
+- name: Set authorized key for non-root user
+  authorized_key:
+    user: simplonadmin
+    state: present
+    key: "{{ lookup('file', '/home/alexandreb/.ssh/groupe1Alexandre.pub') }}"
+
+- name: Disable root SSH login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    state: present
+  notify: Restart ssh 
+
+- name: Allow simplonadmin passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^simplonadmin'
+    line: 'simplonadmin ALL=(ALL) NOPASSWD:ALL' 

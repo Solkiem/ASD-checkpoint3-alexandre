@@ -1,0 +1,23 @@
+---
+- hosts: lxc_containers
+  become: yes
+  tasks:
+    - name: Ensure python3-venv is installed
+      apt:
+        name: python3-venv
+        state: present
+
+    - name: Create a Python virtual environment
+      command: python3 -m venv /opt/myenv
+      args:
+        creates: /opt/myenv/bin/activate
+
+    - name: Add /opt/myenv/bin to user PATH in .bashrc
+      lineinfile:
+        path: /root/.bashrc
+        line: 'export PATH="/opt/myenv/bin:$PATH"'
+        insertafter: EOF
+        state: present
+  roles:
+    - security
+    - docker_install
